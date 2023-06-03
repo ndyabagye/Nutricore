@@ -1,14 +1,18 @@
 import React from 'react';
 import {Navigate, Outlet} from "react-router-dom";
+import {auth} from "./firebase";
 
 interface ProtectedRouteProps {
     children: React.ReactNode,
-    isAllowed: boolean
+    redirectRoute: String,
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({isAllowed, children, redirectPath = '/'}) => {
-    if (!isAllowed) {
-        return <Navigate to={redirectPath} replace/>
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children, redirectRoute}) => {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        return <Navigate to={redirectRoute} replace />
     }
     return children ? children : <Outlet />;
 };

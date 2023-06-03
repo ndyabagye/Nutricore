@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import {useCallback, useState} from "react";
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
 import {toast} from 'react-hot-toast';
 import useLoginModal from '../../hooks/useLoginModal';
@@ -10,14 +10,17 @@ import {AiFillGithub} from "react-icons/ai";
 import Button from "../Button";
 import {FcGoogle} from "react-icons/fc";
 import Modal from "./Modal";
+import {useNavigate} from "react-router-dom";
+
 
 
 const RegisterModal = () => {
+    const navigate = useNavigate()
     const registerModal = useRegisterModal();
     const loginModal = useLoginModal();
     const [isLoading, setIsLoading] = useState(false);
 
-    const {
+;    const {
         register, handleSubmit, formState: {errors}
     } = useForm<FieldValues>({
         defaultValues: {
@@ -29,17 +32,19 @@ const RegisterModal = () => {
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         setIsLoading(true);
-        console.log("The data is", data);
-        // try {
-        //
-        //     const auth = getAuth()
-        //     const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-        //     const user = userCredential.user;
-        //     toast.success("User created successfully");
-        // } catch (error) {
-        //     toast.error("Something went wrong")
-        //     console.log(error);
-        // }
+        try {
+
+            const auth = getAuth()
+            const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+            const user = userCredential.user;
+            if(userCredential.user){
+                navigate('/admin')
+            }
+            toast.success("User created successfully");
+        } catch (error) {
+            toast.error("Something went wrong")
+            console.log(error);
+        }
     };
 
 

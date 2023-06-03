@@ -16,9 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({landing}) => {
                         <Link to='/'>
                             Home
                         </Link>
-                        {landing &&
-                            <LandingMenu/>
-                        }
+                        <LandingMenu/>
                     </div>
                 </Container>
             </div>
