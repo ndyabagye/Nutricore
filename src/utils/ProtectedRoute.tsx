@@ -1,17 +1,16 @@
 import React from 'react';
 import {Navigate, Outlet} from "react-router-dom";
-import {auth} from "./firebase";
+import { useAuthValue } from "../context/AuthContext";
 
 interface ProtectedRouteProps {
     children: React.ReactNode,
     redirectRoute: String,
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children, redirectRoute}) => {
+const ProtectedRoute:React.FC<ProtectedRouteProps> = ({children, redirectRoute}) => {
+    const {currentUser} = useAuthValue();
 
-    const user = auth.currentUser;
-
-    if (!user) {
+    if (!currentUser) {
         return <Navigate to={redirectRoute} replace />
     }
     return children ? children : <Outlet />;

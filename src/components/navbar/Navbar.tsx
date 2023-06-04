@@ -2,12 +2,14 @@ import React from "react";
 import Container from "../Container";
 import {Link} from 'react-router-dom'
 import LandingMenu from "./LandingMenu";
+import { useAuthValue } from "../../context/AuthContext";
 
 interface NavbarProps {
-    landing: Boolean
+    landing: Boolean,
 }
 
 const Navbar: React.FC<NavbarProps> = ({landing}) => {
+    const {currentUser} = useAuthValue();
     return (
         <div className={`fixed w-full z-10 shadow-sm ${landing ? 'bg-emerald-50' : 'bg-white'}`}>
             <div className="py-4 border-b-[1px]">
@@ -16,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({landing}) => {
                         <Link to='/'>
                             Home
                         </Link>
-                        <LandingMenu/>
+                        <LandingMenu currentUser={currentUser}/>
                     </div>
                 </Container>
             </div>

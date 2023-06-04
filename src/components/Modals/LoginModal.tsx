@@ -1,13 +1,13 @@
-import  {useCallback, useState} from "react";
+import  React, {useCallback, useState} from "react";
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
 import {toast} from 'react-hot-toast';
 import useLoginModal from '../../hooks/useLoginModal';
 import useRegisterModal from '../../hooks/useRegisterModal';
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import {useNavigate} from "react-router-dom";
 import Input from "../Inputs/Input";
 import Heading from "../Heading";
 import Modal from "./Modal";
+import { signIn } from "../../firebase";
 
 
 const LoginModal = () => {
@@ -27,18 +27,20 @@ const LoginModal = () => {
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         setIsLoading(true);
+        setIsLoading(true);
         try {
-            const auth = getAuth();
-
-            const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
-            console.log("The logged in user", userCredential);
-            if (userCredential.user) {
+            const res = await signIn(data.email, data.password);
+            if (res?.success === true) {
+                toast.success("User logged in  successfully");
+                console.log("The user is", res)
+                loginModal.onClose();
                 navigate('/admin')
+            } else if (res.error) {
+                toast.error("Something went wrong")
+                console.log(res.error);
             }
-            loginModal.onClose()
-            toast.success("User logged in successfully");
+            setIsLoading(false)
         } catch (error) {
-            toast.error("Something went wrong")
             console.log(error);
         }
     }

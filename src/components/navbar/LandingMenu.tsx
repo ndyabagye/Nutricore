@@ -4,15 +4,15 @@ import MenuItem from "./MenuItem";
 
 import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
-import {auth} from "../../utils/firebase";
 import {useNavigate} from "react-router-dom";
 import Avatar from "../Avatar";
+import { signout } from '../../firebase';
 
-interface UserMenuProps {
-    // currentUser?: SafeUser | null;
+interface LandingMenuProps {
+    currentUser?: any | null;
 }
 
-const LandingMenu: React.FC<UserMenuProps> = () => {
+const LandingMenu: React.FC<LandingMenuProps> = ({currentUser}) => {
     const registerModal = useRegisterModal();
     const loginModal = useLoginModal();
     const navigate = useNavigate();
@@ -23,14 +23,11 @@ const LandingMenu: React.FC<UserMenuProps> = () => {
         setIsOpen((value) => !value);
     }, []);
 
-    const [user, setUser] = useState(auth.currentUser);
-
     const logout = useCallback(() => {
-        auth.signOut()
-        setUser(null);
+        signout()
         toggleOpen()
         navigate("/")
-    }, [toggleOpen, auth, navigate]);
+    }, [toggleOpen, navigate]);
 
 
     return (
@@ -44,17 +41,17 @@ const LandingMenu: React.FC<UserMenuProps> = () => {
                 items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
                     <AiOutlineMenu/>
                     <div className="hidden md:block">
-                        <Avatar/>
+                        <Avatar src={currentUser?.photoURL}/>
                     </div>
                 </div>
                 {isOpen && (
                     <div
                         className="absolute rounded-xl shadow-md w-[60vw] md:w-[20vw] bg-white overflow-hidden right-0 top-12 text-sm">
                         <div className="flex flex-col cursor-pointer">
-                            {user ? (
+                            {currentUser ? (
                                     <>
                                         <div className="text-sm font-sans p-2 flex items-center hover:bg-emerald-200">
-                                            {user.email}
+                                            {currentUser.email}
                                         </div>
                                         <hr/>
                                         <MenuItem onClick={() => {
