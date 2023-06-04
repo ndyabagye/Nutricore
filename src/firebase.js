@@ -6,7 +6,7 @@ import {
   signOut,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { getFirestore, addDoc, collection } from "@firebase/firestore";
+import { getFirestore, setDoc, collection, doc, getDoc, query, where } from "@firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -38,15 +38,17 @@ const signUp = async (email, password, role) => {
       password
     );
     const user = userCredential.user;
-    await addDoc(
-      collection(db, "users"),
-      {
-        uid: user.uid,
-        email: user.email,
-        role: role,
-      },
-      { merge: true }
-    );
+
+    const docRef = doc(db,"users", user?.uid);
+
+    const data = {
+      uid: user.uid,
+      email: user.email,
+      role: role,
+    }
+
+    await setDoc(docRef, data, { merge: true });
+
     return {
       success: true,
       user: user,
@@ -66,6 +68,7 @@ const signIn = async (email, password) => {
       password
     );
     const user = userCredential.user;
+
     return {
       success: true,
       user: user,
@@ -84,4 +87,4 @@ const signout = async () => {
   }
 };
 
-export { auth, db, signIn, signUp, signout };
+export { auth, db, signIn, signUp, signout, doc, getDoc, collection , query, where};

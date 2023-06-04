@@ -34,11 +34,10 @@ const RegisterModal = () => {
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         setIsLoading(true);
         try {
-            const res = await signUp(data.email, data.password, 'admin');
+            const res = await signUp(data.email, data.password, 'customer');
             if (res?.success === true) {
                 toast.success("User created successfully");
                 registerModal.onClose();
-                console.log("The user is", res)
                 navigate('/admin')
             } else if (res.error) {
                 toast.error("Something went wrong")

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import SalesDashboard from "./pages/SalesDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -10,41 +10,45 @@ import RegisterModal from "./components/Modals/RegisterModal";
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from "./context/AuthContext";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth, db, doc, getDoc } from "./firebase";
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState(null);
 
-    useEffect(()=>{
-        onAuthStateChanged(auth, (user)=>{
-            setCurrentUser(user);
+    const getUserData = async (uid: string | undefined) => {
+        if (!uid) return;
+
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+        return docSnap.data();
+    }
+
+    useEffect(() => {
+        onAuthStateChanged(auth, async (user) => {
+            const formattedUser = await getUserData(user?.uid);
+            setCurrentUser(formattedUser);
         });
-    }, []);
+    }, [auth]);
+
     return (
         <BrowserRouter>
-            <LoginModal/>
-            <RegisterModal/>
 
-            <AuthProvider value={{currentUser}}>
-            <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/admin" element={
-                    <ProtectedRoute redirectRoute='/admin'>
-                    <AdminDashboard />
-                    </ProtectedRoute>
-                } />
-                <Route path="/sales" element={
-                    <ProtectedRoute redirectRoute='/sales'>
-                    <SalesDashboard />
-                    </ProtectedRoute>
-                    } />
-                <Route path="/customer" element={
-                    <ProtectedRoute redirectRoute='/customer'>
-                    <CustomerDashboard />
-                    </ProtectedRoute>
-                } />
-                <Route path="*" element={<Error />} />
-            </Routes>
+            <AuthProvider value={{ currentUser }}>
+                <LoginModal />
+                <RegisterModal />
+                <Routes>
+                    <Route path="/" element={<Landing />} />
+                    <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+                        <Route path="/admin" element={<AdminDashboard/>}/>
+                    </Route>
+                    <Route element={<ProtectedRoute allowedRoles={["sales"]} />}>
+                        <Route path="/sales" element={<SalesDashboard/>}/>
+                    </Route>
+                    <Route element={<ProtectedRoute allowedRoles={["customer"]} />}>
+                        <Route path="/customer" element={<CustomerDashboard/>}/>
+                    </Route>
+                    <Route path="*" element={<Error />} />
+                </Routes>
             </AuthProvider>
 
         </BrowserRouter>

@@ -32,7 +32,6 @@ const LoginModal = () => {
             const res = await signIn(data.email, data.password);
             if (res?.success === true) {
                 toast.success("User logged in  successfully");
-                console.log("The user is", res)
                 loginModal.onClose();
                 navigate('/admin')
             } else if (res.error) {
