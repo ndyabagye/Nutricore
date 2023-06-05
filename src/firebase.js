@@ -6,7 +6,7 @@ import {
   signOut,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { getFirestore, setDoc, collection, doc, getDoc, query, where } from "@firebase/firestore";
+import { getFirestore, setDoc, collection, doc, getDoc, query, where, addDoc, getDocs, onSnapshot } from "@firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -87,4 +87,5 @@ const signout = async () => {
   }
 };
 
-export { auth, db, signIn, signUp, signout, doc, getDoc, collection , query, where};
+export default app;
+export { auth, db, signIn, signUp, signout, doc, getDoc, collection , query, where, addDoc, getDocs, onSnapshot};

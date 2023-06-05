@@ -9,8 +9,9 @@ import LoginModal from "./components/Modals/LoginModal";
 import RegisterModal from "./components/Modals/RegisterModal";
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from "./context/AuthContext";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { auth, db, doc, getDoc } from "./firebase";
+
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState(null);
