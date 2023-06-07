@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Navbar from "../components/navbar/Navbar";
-import Heading from "../components/Heading";
+import {useLocation} from "react-router-dom";
 
 interface LayoutProps {
     children: React.ReactNode
@@ -9,11 +9,21 @@ interface LayoutProps {
 const Layout = ({children}: {
     children: React.ReactNode
 }) => {
+    const [landing, setLanding] = useState(false);
+    const url = useLocation()
+
+    useEffect(() => {
+        if (url.pathname === '/') {
+            setLanding(true)
+        }else{
+        setLanding(false)
+        }
+    }, [url])
     return (
         <>
-            <Navbar/>
-            <Heading title='Dashboard'/>
-            <div className="pb-20 pt-28 flex items-center justify-center h-screen">
+            <Navbar landing={landing}/>
+            <div className={`${landing ? '' : 'pt-28 flex flex-col h-screen'}`}
+            >
                 {children}
             </div>
         </>

@@ -23,7 +23,9 @@ const Button: React.FC<ButtonProps> = ({ disabled, outline, label, onClick, smal
       {Icon && (
         <Icon size={24} className="absolute left-4 top-3" />
       )}
+      <div>
       {label}
+      </div>
     </button>
   )
 }

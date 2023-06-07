@@ -7,10 +7,14 @@ import Landing from "./pages/Landing";
 import Error from "./pages/Error";
 import LoginModal from "./components/Modals/LoginModal";
 import RegisterModal from "./components/Modals/RegisterModal";
+import RegisterUserModal from "./components/Modals/RegisterUserModal";
+
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from "./context/AuthContext";
-import { onAuthStateChanged, getAuth } from "firebase/auth";
-import { auth, db, doc, getDoc } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "./firebase";
+import {doc, getDoc} from 'firebase/firestore'
+import ToasterProvider from "./components/Toast";
 
 
 const App = () => {
@@ -33,10 +37,13 @@ const App = () => {
 
     return (
         <BrowserRouter>
-
             <AuthProvider value={{ currentUser }}>
                 <LoginModal />
                 <RegisterModal />
+                <RegisterUserModal/>
+                <ToasterProvider/>
+
+
                 <Routes>
                     <Route path="/" element={<Landing />} />
                     <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>

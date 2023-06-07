@@ -1,5 +1,5 @@
 import React from 'react';
-import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table'
+import {ColumnDef, flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table'
 
 interface TableProps {
     data: any[];
@@ -7,7 +7,7 @@ interface TableProps {
 }
 
 
-export const Table: FC<TableProps> = ({ data, columns }) => {
+export const Table: React.FC<TableProps> = ({ data, columns }) => {
         const { getHeaderGroups, getRowModel } = useReactTable({
             data,
             columns,
@@ -15,7 +15,7 @@ export const Table: FC<TableProps> = ({ data, columns }) => {
         });
 
         return (
-            <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div className="py-2 align-middle inline-block min-w-full">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className='bg-gray-50'>
@@ -23,7 +23,7 @@ export const Table: FC<TableProps> = ({ data, columns }) => {
                             <tr key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <th key={header.id} scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
@@ -35,6 +35,8 @@ export const Table: FC<TableProps> = ({ data, columns }) => {
                             </tr>
                         ))}
                     </thead>
+                    {getRowModel()?.rows?.length > 0 &&
+                        (
                     <tbody className="bg-white divide-y divide-gray-200">
                         {getRowModel().rows.map((row) => (
                             <tr key={row.id} className='hover:bg-gray-50'>
@@ -46,7 +48,14 @@ export const Table: FC<TableProps> = ({ data, columns }) => {
                             </tr>
                         ))}
                     </tbody>
+                        )
+                    }
                 </table>
+                {getRowModel()?.rows?.length <=    0 && (
+                        <div className="flex w-full items-center justify-center p-8 text-neutral-500">
+                            No data yet!
+                        </div>
+                )}
             </div>
             </div>
     );

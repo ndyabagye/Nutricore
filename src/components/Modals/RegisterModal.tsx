@@ -10,7 +10,6 @@ import Button from "../Button";
 import { FcGoogle } from "react-icons/fc";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
-
 import { signUp } from "../../firebase";
 
 
@@ -34,11 +33,11 @@ const RegisterModal = () => {
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         setIsLoading(true);
         try {
-            const res = await signUp(data.email, data.password, 'customer');
+            const res = await signUp(data.email, data.password, data.name,  'customer');
             if (res?.success === true) {
                 toast.success("User created successfully");
                 registerModal.onClose();
-                navigate('/admin')
+                navigate('/customer')
             } else if (res.error) {
                 toast.error("Something went wrong")
                 console.log(res.error);

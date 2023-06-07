@@ -6,7 +6,7 @@ import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
 import {useNavigate} from "react-router-dom";
 import Avatar from "../Avatar";
-import { signout } from '../../firebase';
+import {signout} from '../../firebase';
 
 interface LandingMenuProps {
     currentUser?: any | null;
@@ -35,7 +35,7 @@ const LandingMenu: React.FC<LandingMenuProps> = ({currentUser}) => {
             <div className="flex flex-row items-center gap-3">
                 <div
                     className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full transition cursor-pointer capitalize hover:bg-neutral-500">
-                    {currentUser.role}
+                    {currentUser?.role}
                 </div>
                 <div onClick={toggleOpen} className="p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row
                 items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
@@ -54,11 +54,18 @@ const LandingMenu: React.FC<LandingMenuProps> = ({currentUser}) => {
                                             {currentUser.email}
                                         </div>
                                         <hr/>
-                                        <MenuItem onClick={() => {
-                                            navigate('/admin')
-                                        }} label="Admin"/>
-                                        <MenuItem onClick={() => navigate('/sales')} label="Sales"/>
-                                        <MenuItem onClick={() => navigate('/customer')} label="Customer"/>
+                                        {currentUser?.role === 'admin' && (
+                                            <MenuItem onClick={() => {
+                                                navigate('/admin')
+                                            }} label="Dashboard"/>
+                                        )}
+                                        {currentUser?.role === 'sales' && (
+                                            <MenuItem onClick={() => navigate('/sales')} label="Dashboard"/>
+                                        )}
+                                        {currentUser?.role === 'customer' && (
+                                            <MenuItem onClick={() => navigate('/customer')} label="Dashboard"/>
+                                        )}
+
                                         <hr/>
                                         <MenuItem onClick={() => logout()} label="Logout"/>
                                     </>
